@@ -1,6 +1,5 @@
 # LeFranX
-[🤗HF Dataset](https://huggingface.co/collections/wengmister/lefranx-dataset-68b4684269dbb97fd3061be0)  
-[arXiv](https://arxiv.org/abs/2509.14349)  
+[🤗HF Dataset](https://huggingface.co/collections/wengmister/lefranx-dataset-68b4684269dbb97fd3061be0) | [arXiv](https://arxiv.org/abs/2509.14349) | [XHand Coupling CAD](https://github.com/wengmister/xhand-coupling)
 
 LeRobot Extension for Franka FER Robot & XHand Robot. An instantiation of the [LeVR](https://arxiv.org/abs/2509.14349) framework.
 
@@ -59,7 +58,7 @@ Additionally, you will also need to set up Meta Quest VR App from [this repo](ht
 <details>
 <summary><strong>XHand Dependencies</strong></summary>
 
-For `XHand`, we will use a repository adapted based on Yuzhe Qin's amazing work on [`dex-retargeting`](https://github.com/dexsuite/dex-retargeting) to map human hand motion to the robot hand.
+For `XHand`, we will use a repository modified based on Yuzhe Qin's amazing work on [`dex-retargeting`](https://github.com/dexsuite/dex-retargeting) to map human hand motion to the robot hand. 
 
 To enable XHand Motion Retargeting:
 
@@ -70,6 +69,13 @@ git submodule update --init --recursive
 # Build dependencies
 cd vr-dex-retargeting
 [uv] pip install -e .
+```
+
+You will also need to install RobotEra's python API to control the XHand robot. Download the python wheel from [RobotEra's document center](https://di6kz6gamrw.feishu.cn/file/HucBbWKPEo7JGAxosn7ckicOnTf), and install to your environment.
+
+```bash
+# Use your corresponding python version
+[uv] pip install xhand_controller-1.1.7-cp312-cp312-linux_x86_64.whl 
 ```
 
 </details>
