@@ -65,6 +65,14 @@ def make_robot_from_config(config: RobotConfig) -> Robot:
         from .franka_fer import FrankaFER
 
         return FrankaFER(config)
+    elif config.type == "ur5e":
+        from .ur5e import UR5e
+
+        return UR5e(config)
+    elif config.type == "dexh13":
+        from .dexh13 import DexH13
+
+        return DexH13(config)
     elif config.type == "xhand":
         from .xhand import XHand
 
@@ -73,6 +81,14 @@ def make_robot_from_config(config: RobotConfig) -> Robot:
         from .franka_fer_xhand import FrankaFERXHand
 
         return FrankaFERXHand(config)
+    elif config.type == "ur5e_xhand":
+        from .ur5e_xhand import UR5eXHand
+
+        return UR5eXHand(config)
+    elif config.type == "ur5e_dexh13":
+        from .ur5e_dexh13 import UR5eDexH13
+
+        return UR5eDexH13(config)
     elif config.type == "mock_robot":
         from tests.mocks.mock_robot import MockRobot
 

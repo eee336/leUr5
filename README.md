@@ -12,6 +12,57 @@ There are three main parts to this LeRobot Franka robot extension, `franka_serve
 
 <img width="1891" height="1649" alt="flow-chart" src="https://github.com/user-attachments/assets/cfd8389a-2ecf-4e1c-8f6f-ca1aa0905fbf" />
 
+## UR5e adaptation
+
+This fork also includes a UR5e path alongside the original Franka implementation:
+
+- `src/lerobot/robots/ur5e`: UR5e arm controlled through Universal Robots RTDE.
+- `src/lerobot/robots/ur5e_xhand`: composite UR5e + XHand robot.
+- `src/lerobot/robots/dexh13`: PaXini/Pasini DexH13 hand with 13 active joints.
+- `src/lerobot/robots/ur5e_dexh13`: composite UR5e + DexH13 robot.
+- `src/lerobot/teleoperators/ur5e_vr`: VR wrist teleoperation for UR5e.
+- `src/lerobot/teleoperators/ur5e_xhand_vr`: shared VR teleoperation for UR5e + XHand.
+- `src/lerobot/teleoperators/dexh13_vr`: landmark-based VR teleoperation for DexH13.
+- `src/lerobot/teleoperators/ur5e_dexh13_vr`: shared VR teleoperation for UR5e + DexH13.
+- `scripts/ur5e` and `scripts/ur5e_xhand`: example control scripts.
+- `scripts/ur5e_dexh13`: UR5e + DexH13 teleoperation and recording scripts.
+
+Unlike the Franka path, UR5e does not use `franka_server`. Install the UR RTDE Python bindings in the same environment as LeRobot:
+
+```bash
+[uv] pip install ur-rtde
+```
+
+For UR5e + XHand VR teleoperation, still build the VR message router extension:
+
+```bash
+cd franka_xhand_teleoperator
+[uv] pip install -e .
+```
+
+Then run one of the UR5e examples:
+
+```bash
+python scripts/ur5e/ur5e_vr_teleoperator.py --robot-ip YOUR_UR5E_IP
+python scripts/ur5e_xhand/ur5e_xhand_vr_teleoperator.py --robot-ip YOUR_UR5E_IP --xhand-port /dev/ttyUSB0
+python scripts/ur5e_xhand/record_ur5e_xhand_vr.py --dataset-path ./datasets/ur5e_xhand_demo --robot-ip YOUR_UR5E_IP --xhand-port /dev/ttyUSB0
+python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py --robot-ip YOUR_UR5E_IP --dexh13-protocol SDK --dexh13-hand-port /dev/ttyUSB0
+python scripts/ur5e_dexh13/record_ur5e_dexh13_vr.py --dataset-path ./datasets/ur5e_dexh13_demo --robot-ip YOUR_UR5E_IP --dexh13-protocol SDK --dexh13-hand-port /dev/ttyUSB0
+```
+
+The new LeRobot config types are `ur5e`, `dexh13`, `ur5e_xhand`, `ur5e_dexh13`, `ur5e_vr`, `dexh13_vr`, `ur5e_xhand_vr`, and `ur5e_dexh13_vr`.
+
+DexH13 communication supports `STUB`, `SDK`, `MODBUS_TCP`, and `MODBUS_RTU`. The SDK path uses PaXini DexHandSDK v1.1.0 (`pxdex.dh13.DexH13Control`) and maps LeRobot's 13 active hand actions to the SDK's 16 angle slots. Install the vendor package on the robot PC:
+
+```bash
+sudo dpkg -i DexHandSDK-1.1.0-Linux.deb
+python3 -m pip install pxdex-1.1.0-cp310-cp310-linux_x86_64.whl
+```
+
+The vendor SDK package is built for Ubuntu 22.04 / Python 3.10.12. If your LeRobot environment is Python 3.12, run DexH13 in a Python 3.10 environment or obtain a matching `pxdex` wheel from the vendor. The DexH13 manual also notes that RJ45 EtherCAT and RS485 Modbus-RTU should not be used at the same time; if both are connected, RS485 takes effect and RJ45 cannot be used.
+
+For a command-by-command setup, see [`REPRODUCTION_UR5E_DEXH13.md`](REPRODUCTION_UR5E_DEXH13.md).
+
 ## Build
 
 Project was tested on [`LeRobot`](https://github.com/huggingface/lerobot) commit [`ce3b9f627e55223d6d1c449d348c6b351b35d082`](https://github.com/huggingface/lerobot/commit/ce3b9f627e55223d6d1c449d348c6b351b35d082), with Ubuntu `24.04` and Python `3.12`. To use this extension, copy and paste all content inside the repo over to your `LeRobot` directory and do the following:

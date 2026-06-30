@@ -21,11 +21,15 @@ from .utils import make_teleoperator_from_config
 # Import teleoperator modules to trigger registration
 from . import (  # noqa: F401
     bi_so100_leader,
+    dexh13_vr,
     franka_fer_vr,
     franka_fer_xhand_vr,
     homunculus,
     koch_leader,
     so100_leader,
     so101_leader,
+    ur5e_dexh13_vr,
+    ur5e_vr,
+    ur5e_xhand_vr,
     xhand_vr,
 )
