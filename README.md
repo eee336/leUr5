@@ -61,7 +61,7 @@ python3 -m pip install pxdex-1.1.0-cp310-cp310-linux_x86_64.whl
 
 The vendor SDK package is built for Ubuntu 22.04 / Python 3.10.12. If your LeRobot environment is Python 3.12, run DexH13 in a Python 3.10 environment or obtain a matching `pxdex` wheel from the vendor. The DexH13 manual also notes that RJ45 EtherCAT and RS485 Modbus-RTU should not be used at the same time; if both are connected, RS485 takes effect and RJ45 cannot be used.
 
-For a command-by-command setup, see [`REPRODUCTION_UR5E_DEXH13.md`](REPRODUCTION_UR5E_DEXH13.md).
+For a command-by-command setup, see [`REPRODUCTION_UR5E_DEXH13.md`](REPRODUCTION_UR5E_DEXH13.md). For Meta Quest USB/ADB networking, see [`QUEST_CONNECTION.md`](QUEST_CONNECTION.md).
 
 ## Build
 

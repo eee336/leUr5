@@ -64,6 +64,12 @@ cd ..
 
 If you use a Meta Quest device, keep ADB enabled. The scripts configure ADB reverse by default; pass `--no-adb` only if you handle networking manually.
 
+For the complete Quest USB/ADB and WiFi setup, see:
+
+```text
+QUEST_CONNECTION.md
+```
+
 ## 5.1. Install Dex Retargeting Dependencies
 
 DexH13 hand mapping uses the `dexh13_right` URDF with `dex-retargeting` / DexPilot by default. Install the retargeting package from the bundled source:
