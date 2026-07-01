@@ -52,7 +52,7 @@ python scripts/ur5e_dexh13/record_ur5e_dexh13_vr.py --dataset-path ./datasets/ur
 
 The new LeRobot config types are `ur5e`, `dexh13`, `ur5e_xhand`, `ur5e_dexh13`, `ur5e_vr`, `dexh13_vr`, `ur5e_xhand_vr`, and `ur5e_dexh13_vr`.
 
-DexH13 communication supports `STUB`, `SDK`, `MODBUS_TCP`, and `MODBUS_RTU`. The SDK path uses PaXini DexHandSDK v1.1.0 (`pxdex.dh13.DexH13Control`) and maps LeRobot's 13 active hand actions to the SDK's 16 angle slots. Install the vendor package on the robot PC:
+DexH13 communication supports `STUB`, `SDK`, `MODBUS_TCP`, and `MODBUS_RTU`. The SDK path uses PaXini DexHandSDK v1.1.0 (`pxdex.dh13.DexH13Control`) and maps LeRobot's 13 active hand actions to the SDK's 16 angle slots. Hand teleoperation defaults to `dex-retargeting` / DexPilot with the bundled `dexh13_right` URDF; use `--dexh13-hand-backend geometry` to fall back to the lightweight landmark-angle heuristic. Install the vendor package on the robot PC:
 
 ```bash
 sudo dpkg -i DexHandSDK-1.1.0-Linux.deb

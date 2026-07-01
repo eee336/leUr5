@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com)
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="dexh13_right">
+  <link
+    name="right_palm">
+    <inertial>
+      <origin
+        xyz="0.058857 0.0011395 -0.0010923"
+        rpy="0 0 0" />
+      <mass
+        value="0.14602" />
+      <inertia
+        ixx="0.00014434"
+        ixy="4.5222E-06"
+        ixz="7.0377E-06"
+        iyy="0.00015522"
+        iyz="-1.5057E-06"
+        izz="0.00027709" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_palm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_palm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="right_thumb_link_0">
+    <inertial>
+      <origin
+        xyz="0.00022689 -4.6121E-11 -2.1931E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00021958" />
+      <inertia
+        ixx="5.0993E-09"
+        ixy="2.4672E-16"
+        ixz="1.0918E-12"
+        iyy="8.3569E-10"
+        iyz="-9.2448E-18"
+        izz="5.3667E-09" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.66667 0.66667 0.6549 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_thumb_joint_0"
+    type="revolute">
+    <origin
+      xyz="0.026 -0.0365 -0.00025"
+      rpy="3.1416 0 -1.5708" />
+    <parent
+      link="right_palm" />
+    <child
+      link="right_thumb_link_0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="0.349"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_thumb_link_1">
+    <inertial>
+      <origin
+        xyz="0.020619 0.00016609 -0.0068342"
+        rpy="0 0 0" />
+      <mass
+        value="0.0051746" />
+      <inertia
+        ixx="6.2523E-07"
+        ixy="-2.4757E-07"
+        ixz="5.2859E-07"
+        iyy="1.5946E-06"
+        iyz="1.4958E-07"
+        izz="1.2368E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_thumb_joint_1"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="right_thumb_link_0" />
+    <child
+      link="right_thumb_link_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_thumb_link_2">
+    <inertial>
+      <origin
+        xyz="0.02918645206419 -0.0186272539522961 -0.000218603467386669"
+        rpy="0 0 0" />
+      <mass
+        value="0.0167100811373488" />
+      <inertia
+        ixx="2.5428679239645E-06"
+        ixy="8.65483361519591E-07"
+        ixz="-1.60738702947654E-08"
+        iyy="6.42438168579997E-06"
+        iyz="5.60119113005685E-09"
+        izz="6.11372810219796E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_thumb_joint_2"
+    type="revolute">
+    <origin
+      xyz="0.039999 0.009 -0.0215"
+      rpy="-1.5708 0.261799388 0" />
+    <parent
+      link="right_thumb_link_1" />
+    <child
+      link="right_thumb_link_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_thumb_link_3">
+    <inertial>
+      <origin
+        xyz="0.0099378 -0.0145 -4.7179E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.016623" />
+      <inertia
+        ixx="1.4378E-06"
+        ixy="5.4779E-07"
+        ixz="-8.5437E-09"
+        iyy="1.6315E-06"
+        iyz="6.1424E-09"
+        izz="1.4635E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_thumb_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_thumb_joint_3"
+    type="revolute">
+    <origin
+      xyz="0.063268 -0.016953 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_thumb_link_2" />
+    <child
+      link="right_thumb_link_3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_index_link_0">
+    <inertial>
+      <origin
+        xyz="0.00022689 4.6121E-11 2.1931E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00021958" />
+      <inertia
+        ixx="5.0993E-09"
+        ixy="-2.4672E-16"
+        ixz="-1.0918E-12"
+        iyy="8.3569E-10"
+        iyz="-9.2447E-18"
+        izz="5.3667E-09" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.66667 0.66667 0.6549 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_index_joint_0"
+    type="revolute">
+    <origin
+      xyz="0.122 -0.0315 0.00175"
+      rpy="-3.1416 0 0" />
+    <parent
+      link="right_palm" />
+    <child
+      link="right_index_link_0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="0.349"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_index_link_1">
+    <inertial>
+      <origin
+        xyz="0.013497 -0.0082165 -0.00012423"
+        rpy="0 0 0" />
+      <mass
+        value="0.011243" />
+      <inertia
+        ixx="8.2451E-07"
+        ixy="-1.615E-07"
+        ixz="-6.771E-09"
+        iyy="1.587E-06"
+        iyz="-1.3021E-09"
+        izz="1.282E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_index_joint_1"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="right_index_link_0" />
+    <child
+      link="right_index_link_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_index_link_2">
+    <inertial>
+      <origin
+        xyz="0.0137857073448056 -0.00378219545864722 -4.81393113573522E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0060940829771732" />
+      <inertia
+        ixx="4.05222652751935E-07"
+        ixy="-2.63296727229242E-08"
+        ixz="-6.2205892933295E-09"
+        iyy="6.69894710350192E-07"
+        iyz="1.14007707610596E-10"
+        izz="4.5058620817902E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_index_joint_2"
+    type="revolute">
+    <origin
+      xyz="0.04 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_index_link_1" />
+    <child
+      link="right_index_link_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_index_link_3">
+    <inertial>
+      <origin
+        xyz="0.010653 -0.0078229 8.3867E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0084358" />
+      <inertia
+        ixx="4.2095E-07"
+        ixy="1.3093E-07"
+        ixz="6.1359E-10"
+        iyy="6.4835E-07"
+        iyz="1.4884E-09"
+        izz="4.8338E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_index_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_index_joint_3"
+    type="revolute">
+    <origin
+      xyz="0.03 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_index_link_2" />
+    <child
+      link="right_index_link_3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_middle_link_0">
+    <inertial>
+      <origin
+        xyz="0.00022689 4.6121E-11 2.1931E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.00021958" />
+      <inertia
+        ixx="5.0993E-09"
+        ixy="-2.4672E-16"
+        ixz="-1.0918E-12"
+        iyy="8.3569E-10"
+        iyz="-9.2447E-18"
+        izz="5.3667E-09" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.66667 0.66667 0.6549 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_middle_joint_0"
+    type="revolute">
+    <origin
+      xyz="0.122 0 0.00175"
+      rpy="-3.1416 0 0" />
+    <parent
+      link="right_palm" />
+    <child
+      link="right_middle_link_0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="0.349"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_middle_link_1">
+    <inertial>
+      <origin
+        xyz="0.013497 -0.0082165 -0.00012423"
+        rpy="0 0 0" />
+      <mass
+        value="0.011243" />
+      <inertia
+        ixx="8.2451E-07"
+        ixy="-1.615E-07"
+        ixz="-6.771E-09"
+        iyy="1.587E-06"
+        iyz="-1.3021E-09"
+        izz="1.282E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_middle_joint_1"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="right_middle_link_0" />
+    <child
+      link="right_middle_link_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_middle_link_2">
+    <inertial>
+      <origin
+        xyz="0.013786 -0.0037822 -4.8139E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0060941" />
+      <inertia
+        ixx="4.0522E-07"
+        ixy="-2.633E-08"
+        ixz="-6.2206E-09"
+        iyy="6.6989E-07"
+        iyz="1.1401E-10"
+        izz="4.5059E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_middle_joint_2"
+    type="revolute">
+    <origin
+      xyz="0.04 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_middle_link_1" />
+    <child
+      link="right_middle_link_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_middle_link_3">
+    <inertial>
+      <origin
+        xyz="0.010653 -0.0078229 8.3867E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0084358" />
+      <inertia
+        ixx="4.2095E-07"
+        ixy="1.3093E-07"
+        ixz="6.1359E-10"
+        iyy="6.4835E-07"
+        iyz="1.4884E-09"
+        izz="4.8338E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_middle_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_middle_joint_3"
+    type="revolute">
+    <origin
+      xyz="0.03 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_middle_link_2" />
+    <child
+      link="right_middle_link_3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_ring_link_0">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_ring_joint_0"
+    type="revolute">
+    <origin
+      xyz="0.122 0.0315 0.00175"
+      rpy="-3.1416 0 0" />
+    <parent
+      link="right_palm" />
+    <child
+      link="right_ring_link_0" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.349"
+      upper="0.349"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_ring_link_1">
+    <inertial>
+      <origin
+        xyz="0.013497 -0.0082165 -0.00012423"
+        rpy="0 0 0" />
+      <mass
+        value="0.011243" />
+      <inertia
+        ixx="8.2451E-07"
+        ixy="-1.615E-07"
+        ixz="-6.771E-09"
+        iyy="1.587E-06"
+        iyz="-1.3021E-09"
+        izz="1.282E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_ring_joint_1"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="right_ring_link_0" />
+    <child
+      link="right_ring_link_1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_ring_link_2">
+    <inertial>
+      <origin
+        xyz="0.013786 -0.0037823 -4.8139E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0060941" />
+      <inertia
+        ixx="4.0522E-07"
+        ixy="-2.633E-08"
+        ixz="-6.2206E-09"
+        iyy="6.6989E-07"
+        iyz="1.1401E-10"
+        izz="4.5059E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_ring_joint_2"
+    type="revolute">
+    <origin
+      xyz="0.04 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_ring_link_1" />
+    <child
+      link="right_ring_link_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+  <link
+    name="right_ring_link_3">
+    <inertial>
+      <origin
+        xyz="0.010653 -0.0078229 8.3868E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0084358" />
+      <inertia
+        ixx="4.2095E-07"
+        ixy="1.3093E-07"
+        ixz="6.136E-10"
+        iyy="6.4835E-07"
+        iyz="1.4883E-09"
+        izz="4.8338E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://dexh13_right/meshes/right_ring_link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_ring_joint_3"
+    type="revolute">
+    <origin
+      xyz="0.03 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_ring_link_2" />
+    <child
+      link="right_ring_link_3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1.5707"
+      effort="1"
+      velocity="2" />
+  </joint>
+</robot>

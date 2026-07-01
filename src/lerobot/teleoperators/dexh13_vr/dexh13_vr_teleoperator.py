@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import numpy as np
@@ -41,6 +42,10 @@ class DexH13VRTeleoperator(Teleoperator):
         self.vr_manager = get_vr_router_manager()
         self._is_connected = False
         self._last_positions: Optional[np.ndarray] = None
+        self._retargeting = None
+        self._retargeting_detector = None
+        self._retargeting_to_dexh13 = np.array([], dtype=int)
+        self._active_backend = "geometry"
         self._joint_limits = np.array(
             [
                 [math.radians(-30.0), math.radians(30.0)],
@@ -59,6 +64,7 @@ class DexH13VRTeleoperator(Teleoperator):
             ],
             dtype=float,
         )
+        self._setup_retargeting_backend()
 
     @property
     def action_features(self) -> dict:
@@ -124,6 +130,13 @@ class DexH13VRTeleoperator(Teleoperator):
             return self._to_action(self._last_positions if self._last_positions is not None else np.zeros(13))
 
     def _landmarks_to_joint_positions(self, landmarks_data) -> Optional[np.ndarray]:
+        if self._active_backend == "retargeting":
+            joint_positions = self._retarget_landmarks_to_joint_positions(landmarks_data)
+            if joint_positions is not None:
+                return joint_positions
+            if not self.config.fallback_to_geometry:
+                return None
+
         if not hasattr(landmarks_data, "landmarks") or len(landmarks_data.landmarks) != 21:
             if self.config.vr_verbose:
                 logger.warning("Expected 21 VR hand landmarks for DexH13")
@@ -153,6 +166,99 @@ class DexH13VRTeleoperator(Teleoperator):
             dtype=float,
         )
         return np.clip(joints, self._joint_limits[:, 0], self._joint_limits[:, 1])
+
+    def _setup_retargeting_backend(self) -> None:
+        backend = self.config.hand_mapping_backend.lower()
+        if backend == "geometry":
+            self._active_backend = "geometry"
+            return
+        if backend != "retargeting":
+            raise ValueError(f"Unsupported DexH13 hand_mapping_backend: {self.config.hand_mapping_backend}")
+
+        try:
+            from dex_retargeting.retargeting_config import RetargetingConfig
+            from lerobot.teleoperators.xhand_vr.vr_hand_detector_adapter import VRHandDetectorAdapter
+
+            repo_root = Path(__file__).resolve().parents[4]
+            config_path = Path(self.config.retargeting_config_path)
+            if not config_path.is_absolute():
+                config_path = repo_root / config_path
+            urdf_dir = Path(self.config.retargeting_urdf_dir)
+            if not urdf_dir.is_absolute():
+                urdf_dir = repo_root / urdf_dir
+
+            RetargetingConfig.set_default_urdf_dir(str(urdf_dir))
+            self._retargeting = RetargetingConfig.load_from_file(config_path).build()
+            self._retargeting_detector = VRHandDetectorAdapter(
+                hand_type="Right",
+                robot_name="dexh13_right",
+                tcp_port=self.config.vr_tcp_port,
+                verbose=self.config.vr_verbose,
+                router=None,
+            )
+            self._setup_retargeting_joint_mapping()
+            self._active_backend = "retargeting"
+            logger.info("DexH13 dex-retargeting backend initialized from %s", config_path)
+        except Exception as exc:
+            if not self.config.fallback_to_geometry:
+                raise RuntimeError("Failed to initialize DexH13 dex-retargeting backend") from exc
+            self._active_backend = "geometry"
+            self._retargeting = None
+            self._retargeting_detector = None
+            self._retargeting_to_dexh13 = np.array([], dtype=int)
+            logger.warning("DexH13 dex-retargeting unavailable; using geometry backend: %s", exc)
+
+    def _setup_retargeting_joint_mapping(self) -> None:
+        if self._retargeting is None:
+            return
+        retargeting_joint_names = list(self._retargeting.joint_names)
+        desired_joint_names = [
+            "right_index_joint_0",
+            "right_index_joint_1",
+            "right_index_joint_2",
+            "right_middle_joint_0",
+            "right_middle_joint_1",
+            "right_middle_joint_2",
+            "right_ring_joint_0",
+            "right_ring_joint_1",
+            "right_ring_joint_2",
+            "right_thumb_joint_0",
+            "right_thumb_joint_1",
+            "right_thumb_joint_2",
+            "right_thumb_joint_3",
+        ]
+
+        mapping = []
+        missing = []
+        for joint_name in desired_joint_names:
+            if joint_name in retargeting_joint_names:
+                mapping.append(retargeting_joint_names.index(joint_name))
+            else:
+                missing.append(joint_name)
+        if missing:
+            raise ValueError(f"DexH13 retargeting output is missing joints: {missing}")
+        self._retargeting_to_dexh13 = np.array(mapping, dtype=int)
+
+    def _retarget_landmarks_to_joint_positions(self, landmarks_data) -> Optional[np.ndarray]:
+        if self._retargeting is None or self._retargeting_detector is None:
+            return None
+
+        joint_pos = self._retargeting_detector.process_landmarks_data(landmarks_data)
+        if joint_pos is None:
+            return None
+
+        retargeting_type = self._retargeting.optimizer.retargeting_type
+        indices = self._retargeting.optimizer.target_link_human_indices
+        if retargeting_type == "POSITION":
+            ref_value = joint_pos[indices, :]
+        else:
+            origin_indices = indices[0, :]
+            task_indices = indices[1, :]
+            ref_value = joint_pos[task_indices, :] - joint_pos[origin_indices, :]
+
+        qpos = self._retargeting.retarget(ref_value)
+        mapped = np.array(qpos, dtype=float).reshape(-1)[self._retargeting_to_dexh13]
+        return np.clip(mapped, self._joint_limits[:, 0], self._joint_limits[:, 1])
 
     def _thumb_joints(self, points: np.ndarray) -> tuple[float, float, float, float]:
         cmc, mcp, ip, tip = self.THUMB

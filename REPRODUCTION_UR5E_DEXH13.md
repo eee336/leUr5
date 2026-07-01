@@ -64,6 +64,26 @@ cd ..
 
 If you use a Meta Quest device, keep ADB enabled. The scripts configure ADB reverse by default; pass `--no-adb` only if you handle networking manually.
 
+## 5.1. Install Dex Retargeting Dependencies
+
+DexH13 hand mapping uses the `dexh13_right` URDF with `dex-retargeting` / DexPilot by default. Install the retargeting package from the bundled source:
+
+```bash
+python -m pip install -e vr-dex-retargeting
+```
+
+The DexH13 retargeting config is:
+
+```text
+dexh13_right/config/dexh13_right_dexpilot.yml
+```
+
+It uses the URDF:
+
+```text
+dexh13_right/urdf/dexh13_right.urdf
+```
+
 ## 6. Install PaXini DexH13 SDK
 
 Unzip the SDK package supplied by PaXini:
@@ -145,6 +165,8 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --dexh13-protocol SDK \
   --dexh13-hand-port /dev/ttyUSB0 \
   --dexh13-camera-port none \
+  --dexh13-hand-backend retargeting \
+  --dexh13-retargeting-config dexh13_right/config/dexh13_right_dexpilot.yml \
   --control-freq 30
 ```
 
@@ -163,6 +185,7 @@ python scripts/ur5e_dexh13/record_ur5e_dexh13_vr.py \
   --dexh13-protocol SDK \
   --dexh13-hand-port /dev/ttyUSB0 \
   --dexh13-camera-port none \
+  --dexh13-hand-backend retargeting \
   --fps 30 \
   --num-episodes 10 \
   --episode-time 60 \
@@ -198,6 +221,17 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --no-home
 ```
 
+DexH13 with the old lightweight geometry mapping instead of URDF retargeting:
+
+```bash
+python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
+  --robot-ip 192.168.1.10 \
+  --dexh13-protocol SDK \
+  --dexh13-hand-port /dev/ttyUSB0 \
+  --dexh13-camera-port none \
+  --dexh13-hand-backend geometry
+```
+
 ## 12. Troubleshooting
 
 If `ModuleNotFoundError: pxdex` appears, confirm that the PaXini wheel was installed into the active Python 3.10 environment.
@@ -221,3 +255,5 @@ If the hand moves in the wrong finger order, verify that actions follow the repo
 6-8   ring:   abduction, mcp, pip
 9-12  thumb:  abduction, mcp, pip, dip
 ```
+
+The `dexh13_right` URDF order is thumb/index/middle/ring, while the DexH13 SDK/EtherCAT active command order in this repository is index/middle/ring/thumb. The teleoperator maps by URDF joint name before sending actions, so do not reorder action indices manually unless you also update the mapping in `DexH13VRTeleoperator`.

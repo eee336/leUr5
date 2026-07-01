@@ -17,6 +17,13 @@ class DexH13VRTeleoperatorConfig(TeleoperatorConfig):
     control_frequency: float = 30.0
     smoothing_alpha: float = 0.45
 
+    # "retargeting" uses dex-retargeting + dexh13_right URDF; "geometry"
+    # keeps the lightweight landmark-angle heuristic.
+    hand_mapping_backend: str = "retargeting"
+    retargeting_config_path: str = "dexh13_right/config/dexh13_right_dexpilot.yml"
+    retargeting_urdf_dir: str = "."
+    fallback_to_geometry: bool = True
+
     # DexH13 has four fingers; this heuristic ignores human pinky landmarks.
     use_pinky_for_ring: bool = False
 

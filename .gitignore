@@ -11,3 +11,6 @@
 # Pybind11
 *.egg-info
 *.so
+
+# Vendor export logs
+dexh13_right/export.log

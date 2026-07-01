@@ -1,0 +1,22 @@
+retargeting:
+  type: DexPilot
+  urdf_path: dexh13_right/urdf/dexh13_right.urdf
+
+  wrist_link_name: "right_palm"
+  target_joint_names: [
+    "right_index_joint_0", "right_index_joint_1", "right_index_joint_2",
+    "right_middle_joint_0", "right_middle_joint_1", "right_middle_joint_2",
+    "right_ring_joint_0", "right_ring_joint_1", "right_ring_joint_2",
+    "right_thumb_joint_0", "right_thumb_joint_1", "right_thumb_joint_2", "right_thumb_joint_3"
+  ]
+  finger_tip_link_names: [
+    "right_thumb_link_3",
+    "right_index_link_3",
+    "right_middle_link_3",
+    "right_ring_link_3"
+  ]
+
+  scaling_factor: 1.0
+  low_pass_alpha: 0.35
+  project_dist: 0.03
+  escape_dist: 0.03

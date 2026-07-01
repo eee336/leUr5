@@ -23,6 +23,10 @@ class UR5eDexH13VRTeleoperatorConfig(TeleoperatorConfig):
 
     hand_control_frequency: float = 30.0
     hand_smoothing_alpha: float = 0.45
+    hand_mapping_backend: str = "retargeting"
+    hand_retargeting_config_path: str = "dexh13_right/config/dexh13_right_dexpilot.yml"
+    hand_retargeting_urdf_dir: str = "."
+    hand_fallback_to_geometry: bool = True
     hand_flexion_scale: float = 1.0
     hand_abduction_scale: float = 0.7
     hand_use_pinky_for_ring: bool = False

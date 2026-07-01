@@ -54,6 +54,10 @@ def parse_args():
     parser.add_argument("--dexh13-feedback-register", type=int)
     parser.add_argument("--dexh13-current-register", type=int)
     parser.add_argument("--dexh13-register-scale", type=float, default=10000.0)
+    parser.add_argument("--dexh13-hand-backend", choices=["retargeting", "geometry"], default="retargeting")
+    parser.add_argument("--dexh13-retargeting-config", default="dexh13_right/config/dexh13_right_dexpilot.yml")
+    parser.add_argument("--dexh13-retargeting-urdf-dir", default=".")
+    parser.add_argument("--dexh13-no-geometry-fallback", action="store_true")
     return parser.parse_args()
 
 
@@ -102,6 +106,10 @@ def main():
             setup_adb=not args.no_adb,
             vr_verbose=args.verbose,
             hand_control_frequency=args.control_freq,
+            hand_mapping_backend=args.dexh13_hand_backend,
+            hand_retargeting_config_path=args.dexh13_retargeting_config,
+            hand_retargeting_urdf_dir=args.dexh13_retargeting_urdf_dir,
+            hand_fallback_to_geometry=not args.dexh13_no_geometry_fallback,
         )
     )
 
