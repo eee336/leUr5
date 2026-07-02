@@ -1,79 +1,79 @@
-# Meta Quest Connection Guide
+# Meta Quest 连接教程
 
-This guide explains how to connect a Meta Quest headset to the robot control computer for UR5e + DexH13 VR teleoperation.
+这份文档说明如何把 Meta Quest 头显连接到机器人控制电脑，用于 UR5e + DexH13 VR 遥操作。
 
-The recommended setup is:
+推荐连接方式是：
 
 ```text
-Quest VR app
-  -> USB cable
+Quest VR App
+  -> USB 数据线
   -> adb reverse tcp:8000
-  -> computer localhost:8000
+  -> 电脑 localhost:8000
   -> LeFranX VR message router
-  -> UR5e + DexH13 teleoperation
+  -> UR5e + DexH13 遥操作
 ```
 
-## 1. Prepare Quest
+## 1. 准备 Quest
 
-On the Quest headset:
+在 Quest 头显上：
 
-1. Enable Developer Mode for the headset.
-2. Install the matching Quest VR teleoperation app.
-3. Connect the Quest to the computer with a USB-C cable.
-4. Put on the headset and allow USB debugging / RSA authorization when prompted.
+1. 开启开发者模式。
+2. 安装匹配的 Quest VR 遥操作 App。
+3. 使用 USB-C 数据线连接 Quest 和电脑。
+4. 戴上头显，在弹窗中允许 USB debugging / RSA 授权。
 
-## 2. Install ADB
+## 2. 安装 ADB
 
-Ubuntu:
+Ubuntu：
 
 ```bash
 sudo apt update
 sudo apt install android-tools-adb -y
 ```
 
-macOS:
+macOS：
 
 ```bash
 brew install android-platform-tools
 ```
 
-Check that the Quest is visible:
+检查 Quest 是否被电脑识别：
 
 ```bash
 adb devices
 ```
 
-Expected output:
+正常输出类似：
 
 ```text
 List of devices attached
 1WMHHxxxxxxxx    device
 ```
 
-If it says `unauthorized`, put on the headset and accept the debugging prompt.
+如果显示 `unauthorized`，戴上 Quest 并同意调试授权。
 
-## 3. Configure USB Port Forwarding
+## 3. 配置 USB 端口转发
 
-The project scripts configure ADB reverse automatically by default. Do not pass `--no-adb` unless you want to manage networking yourself.
+项目脚本默认会自动配置 ADB reverse。除非你想手动管理网络，否则不要传 `--no-adb`。
 
-Manual command:
+手动配置命令：
 
 ```bash
 adb reverse tcp:8000 tcp:8000
 adb reverse --list
 ```
 
-Expected output:
+正常输出类似：
 
 ```text
 1WMHHxxxxxxxx tcp:8000 tcp:8000
 ```
 
-This means the Quest app can connect to its own `localhost:8000`, and ADB forwards that traffic to the computer's `localhost:8000`.
+含义是：Quest App 连接头显自己的 `localhost:8000` 时，ADB 会把流量转发到电脑的 `localhost:8000`。
 
-## 4. Start Computer-Side Teleoperation
+## 4. 启动电脑端遥操作脚本
 
-Start the LeFranX script first:
+先启动电脑端 LeFranX 脚本：
 
 ```bash
 python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
@@ -85,7 +85,7 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --vr-port 8000
 ```
 
-For software-only startup testing:
+只做软件启动测试：
 
 ```bash
 python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
@@ -95,39 +95,39 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --vr-port 8000
 ```
 
-## 5. Start Quest App
+## 5. 启动 Quest App
 
-After the computer-side script is running, open the Quest VR teleoperation app.
+电脑端脚本运行后，再打开 Quest 里的 VR 遥操作 App。
 
-The app should stream:
+App 应该发送：
 
-- wrist position
-- wrist quaternion
-- 21 hand landmarks
-- tracking validity/status fields
+- 手腕位置
+- 手腕四元数
+- 21 个手部 landmarks
+- tracking valid/status 状态
 
-The computer script consumes wrist data for UR5e EE control and hand landmarks for DexH13 retargeting.
+电脑端脚本会用 wrist 数据控制 UR5e 末端，用 hand landmarks 做 DexH13 retargeting。
 
-## 6. Verify Data Flow
+## 6. 验证数据流
 
-In another terminal:
+另开一个终端：
 
 ```bash
 adb devices
 adb reverse --list
 ```
 
-If the computer-side script has verbose logging enabled:
+如果电脑端脚本开启了 verbose：
 
 ```bash
 --verbose
 ```
 
-you should see VR connection/status messages.
+日志里应该能看到 VR connection/status 信息。
 
-## 7. Troubleshooting
+## 7. 排错
 
-Restart ADB:
+重启 ADB：
 
 ```bash
 adb kill-server
@@ -136,29 +136,29 @@ adb devices
 adb reverse tcp:8000 tcp:8000
 ```
 
-If the device is missing:
+如果看不到设备：
 
 ```bash
 adb devices
 ```
 
-Then reconnect the USB cable and accept the Quest debugging prompt.
+然后重新插拔 USB 线，并在 Quest 里确认调试授权。
 
-If the device shows `unauthorized`, put on the headset and approve USB debugging.
+如果设备状态是 `unauthorized`，戴上头显并允许 USB debugging。
 
-If the script says there is no VR data:
+如果脚本提示没有 VR 数据：
 
 ```bash
 adb reverse --list
 ```
 
-If no `tcp:8000 tcp:8000` entry appears, run:
+如果没有 `tcp:8000 tcp:8000`，执行：
 
 ```bash
 adb reverse tcp:8000 tcp:8000
 ```
 
-If port `8000` is already in use on the computer, use another port consistently on both sides:
+如果电脑端 `8000` 端口被占用，可以两边统一换成其他端口：
 
 ```bash
 python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
@@ -167,38 +167,38 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --dexh13-protocol STUB
 ```
 
-and:
+同时执行：
 
 ```bash
 adb reverse tcp:8001 tcp:8001
 ```
 
-## 8. WiFi Alternative
+## 8. WiFi 替代方案
 
-USB + ADB reverse is recommended for first setup.
+第一次调试建议使用 USB + ADB reverse。
 
-WiFi mode is possible if the Quest app can connect directly to the computer IP. In that case:
+如果 Quest App 支持直接连接电脑 IP，也可以走 WiFi：
 
-1. Put Quest and computer on the same network.
-2. Find the computer IP:
+1. Quest 和电脑连接到同一个网络。
+2. 查看电脑 IP：
 
    ```bash
    ip addr
    ```
 
-3. Allow the TCP port through the firewall:
+3. 如果电脑开了防火墙，放行 TCP 端口：
 
    ```bash
    sudo ufw allow 8000/tcp
    ```
 
-4. Configure the Quest app to connect to:
+4. 在 Quest App 里配置连接地址：
 
    ```text
    COMPUTER_IP:8000
    ```
 
-5. Start the script with:
+5. 启动脚本时加 `--no-adb`：
 
    ```bash
    python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
@@ -209,4 +209,4 @@ WiFi mode is possible if the Quest app can connect directly to the computer IP. 
      --dexh13-hand-port /dev/ttyUSB0
    ```
 
-Use WiFi only after USB mode works, because it adds router, firewall, and IP configuration variables.
+WiFi 模式会额外引入路由器、防火墙和 IP 配置变量；建议 USB 模式跑通后再切换。

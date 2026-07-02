@@ -1,28 +1,28 @@
-# PICO Connection Guide
+# PICO 连接教程
 
-This guide replaces the Quest USB/ADB data source with a PICO headset.
+这份文档说明如何用 PICO 头显替代 Quest USB/ADB 数据源。
 
-The computer side is unchanged: LeFranX runs a TCP server through `vr_message_router` and consumes:
+电脑端保持不变：LeFranX 通过 `vr_message_router` 启动 TCP server，并接收下面两类文本消息：
 
 ```text
 Right wrist:, x, y, z, qx, qy, qz, qw, leftFist: state
 Right landmarks: x0,y0,z0,x1,y1,z1,...,x20,y20,z20
 ```
 
-The PICO side runs a Unity app that reads PICO hand tracking and sends those two text messages over WiFi.
+PICO 端运行一个 Unity App，读取 PICO 手部追踪数据，并通过 WiFi 把这两类消息发给电脑。
 
-## 1. What PICO Provides
+## 1. PICO 提供的数据
 
-Official PICO reference: <https://developer-cn.picoxr.com/document/unity/hand-tracking/>
+PICO 官方手部追踪文档：<https://developer-cn.picoxr.com/document/unity/hand-tracking/>
 
-PICO Unity XR SDK exposes hand tracking through:
+PICO Unity XR SDK 通过下面接口提供手部追踪：
 
 - `PXR_HandTracking.GetSettingState()`
 - `PXR_HandTracking.GetActiveInputDevice()`
 - `PXR_HandTracking.GetJointLocations(HandType.HandRight, ref jointLocations)`
 - `PXR_HandTracking.GetAimState(HandType.HandRight, ref aimState)`
 
-The PICO API gives 26 hand joints. LeFranX expects 21 MediaPipe-style landmarks, so `PicoLeUr5HandStreamer.cs` maps PICO joints to:
+PICO API 提供 26 个手部关节。LeFranX 电脑端沿用 21 点 MediaPipe/Quest 风格 landmarks，因此 `PicoLeUr5HandStreamer.cs` 会把 PICO 关节映射为：
 
 ```text
 0 wrist
@@ -33,33 +33,33 @@ The PICO API gives 26 hand joints. LeFranX expects 21 MediaPipe-style landmarks,
 17-20 little
 ```
 
-## 2. Network Layout
+## 2. 网络结构
 
-Recommended PICO setup:
+推荐 PICO 连接方式：
 
 ```text
-PICO headset and robot computer on same WiFi/LAN
-PICO Unity app connects to COMPUTER_IP:8000
-Computer script runs with --no-adb --vr-port 8000
+PICO 头显和机器人控制电脑在同一 WiFi/LAN
+PICO Unity App 连接 COMPUTER_IP:8000
+电脑脚本使用 --no-adb --vr-port 8000
 ```
 
-Unlike Quest USB mode, this does not use `adb reverse`.
+这条路线不使用 Quest 的 `adb reverse`。
 
-## 3. Prepare the Computer
+## 3. 准备电脑端
 
-Find the computer IP on the same network as the PICO:
+查看电脑在同一网络下的 IP：
 
 ```bash
 ip addr
 ```
 
-Allow the TCP port if firewall is enabled:
+如果启用了防火墙，放行 TCP 端口：
 
 ```bash
 sudo ufw allow 8000/tcp
 ```
 
-Start a software-only smoke test first:
+先运行软件模式烟测：
 
 ```bash
 python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
@@ -71,7 +71,7 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --verbose
 ```
 
-For real hardware:
+连接真实硬件时：
 
 ```bash
 python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
@@ -84,38 +84,38 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
   --vr-port 8000
 ```
 
-Keep `--no-adb`; PICO connects over WiFi directly.
+注意保留 `--no-adb`，因为 PICO 通过 WiFi 直接连接电脑。
 
-## 4. Prepare Unity for PICO
+## 4. 准备 PICO Unity 工程
 
-1. Create or open a Unity Android XR project.
-2. Import the PICO Unity Integration SDK / PICO Unity XR SDK.
-3. Enable PICO XR plugin in XR Plug-in Management.
-4. Enable hand tracking in the PICO project settings and on the headset.
-5. Add an empty GameObject named `LeUr5PicoStreamer`.
-6. Add `pico/unity/PicoLeUr5HandStreamer.cs` to the Unity project.
-7. Attach `PicoLeUr5HandStreamer` to `LeUr5PicoStreamer`.
-8. Set:
+1. 创建或打开一个 Unity Android XR 工程。
+2. 导入 PICO Unity Integration SDK / PICO Unity XR SDK。
+3. 在 XR Plug-in Management 中启用 PICO XR plugin。
+4. 在 PICO 项目设置和头显设置中启用手部追踪。
+5. 新建一个空 GameObject，命名为 `LeUr5PicoStreamer`。
+6. 把 `pico/unity/PicoLeUr5HandStreamer.cs` 加入 Unity 工程。
+7. 将 `PicoLeUr5HandStreamer` 挂载到 `LeUr5PicoStreamer`。
+8. 在 Inspector 中设置：
 
 ```text
-Computer Host = your computer IP
+Computer Host = 电脑 IP
 Computer Port = 8000
 Stream Hz = 30
 ```
 
-Build and install the app to the PICO headset.
+然后 Build 并安装到 PICO 头显。
 
-## 5. Run Order
+## 5. 运行顺序
 
-1. Put PICO and computer on the same network.
-2. Start the LeFranX computer-side script.
-3. Launch the PICO Unity app.
-4. Show your right hand to the headset.
-5. Watch the computer logs for `tcp_connected`, `wrist_valid`, and `landmarks_valid`.
+1. 确认 PICO 和电脑在同一网络。
+2. 先启动 LeFranX 电脑端脚本。
+3. 再启动 PICO Unity App。
+4. 把右手放到头显手部追踪范围内。
+5. 查看电脑端日志，确认 `tcp_connected`、`wrist_valid`、`landmarks_valid` 变为有效。
 
-## 6. Coordinate Calibration
+## 6. 坐标系标定
 
-The PICO script sends PICO/Unity world coordinates. The existing UR5e VR processor currently applies the same VR-to-robot transform used for Quest:
+PICO 脚本默认发送 PICO/Unity 世界坐标。当前 UR5e VR 处理器会套用和 Quest 相同的 VR 到机器人坐标变换：
 
 ```text
 Robot X = VR Z
@@ -123,47 +123,47 @@ Robot Y = -VR X
 Robot Z = VR Y
 ```
 
-This is a starting point, not a site calibration. If moving your PICO-tracked hand forward moves the UR5e in the wrong direction, adjust the axis conversion in one of these places:
+这只是起始假设，不是现场标定。如果你在 PICO 里手向前移动，而 UR5e 末端方向不对，可以调整下面任意一处：
 
-- Unity side: `ConvertUnityPositionForLeFranX()` in `PicoLeUr5HandStreamer.cs`
-- Python side: `_compute_target_matrix()` in `src/lerobot/teleoperators/ur5e_vr/arm_ik_processor.py`
+- Unity 端：`PicoLeUr5HandStreamer.cs` 里的 `ConvertUnityPositionForLeFranX()`
+- Python 端：`src/lerobot/teleoperators/ur5e_vr/arm_ik_processor.py` 里的 `_compute_target_matrix()`
 
-Change only one side at a time.
+建议一次只改一边，避免叠加变换后更难排查。
 
-## 7. Troubleshooting
+## 7. 排错
 
-Check that the computer is listening:
+检查电脑端是否在监听：
 
 ```bash
 ss -ltnp | grep 8000
 ```
 
-Check PICO can reach the computer:
+检查 PICO 是否能访问电脑：
 
 ```bash
 ping COMPUTER_IP
 ```
 
-If the computer logs show no VR connection:
+如果电脑日志里没有 VR 连接：
 
-- confirm `Computer Host` in Unity is the computer IP, not `localhost`
-- confirm firewall allows `8000/tcp`
-- confirm both devices are on the same subnet
-- confirm the LeFranX script was started before the PICO app
+- 确认 Unity 中 `Computer Host` 是电脑 IP，而不是 `localhost`
+- 确认防火墙允许 `8000/tcp`
+- 确认 PICO 和电脑在同一网段
+- 确认先启动了 LeFranX 电脑端脚本，再启动 PICO App
 
-If connected but no hand data:
+如果已经连接但没有手部数据：
 
-- enable PICO hand tracking in headset settings
-- make sure controllers are not taking over active input
-- keep hands in the headset tracking volume
-- log `PXR_HandTracking.GetSettingState()` and `GetActiveInputDevice()`
+- 确认 PICO 头显设置里启用了 hand tracking
+- 确认控制器没有抢占 active input
+- 确认手在头显追踪范围内
+- 在 Unity 里打印 `PXR_HandTracking.GetSettingState()` 和 `GetActiveInputDevice()` 的结果
 
-If hand landmarks are valid but retargeting looks mirrored or rotated:
+如果 landmarks 有数据但 retargeting 看起来镜像或旋转不对：
 
-- first switch to geometry backend for a simpler sanity check:
+- 先切到几何后端做简单验证：
 
   ```bash
   --dexh13-hand-backend geometry
   ```
 
-- then tune the Unity coordinate conversion or Python VR-to-robot transform.
+- 再调整 Unity 坐标转换或 Python VR 到 robot 的坐标转换。

@@ -1,20 +1,19 @@
-# PICO Headset Integration
+# PICO 头显接入
 
-This directory contains a PICO replacement path for the Quest-side VR data source.
+这个目录提供一条用 PICO 替代 Quest 作为 VR 数据源的路线。
 
-The computer-side LeFranX scripts already listen for a simple TCP text protocol on `--vr-port` (default `8000`). The PICO side only needs to stream the same wrist and hand-landmark messages, so the UR5e + DexH13 Python code can stay unchanged.
+电脑端 LeFranX 脚本已经会在 `--vr-port` 指定端口监听简单 TCP 文本协议，默认端口是 `8000`。PICO 端只需要发送同样格式的 wrist 和 hand-landmark 消息，UR5e + DexH13 的 Python 代码就可以继续复用。
 
-Use this when you want:
+适用场景：
 
 ```text
-PICO headset + PICO Unity hand tracking
-  -> WiFi TCP stream
+PICO 头显 + PICO Unity 手部追踪
+  -> WiFi TCP 数据流
   -> LeFranX VR message router
-  -> UR5e EE control + DexH13 retargeting
+  -> UR5e 末端控制 + DexH13 retargeting
 ```
 
-Files:
+文件说明：
 
-- `unity/PicoLeUr5HandStreamer.cs`: Unity component that reads PICO right-hand tracking and streams LeFranX-compatible TCP messages.
-- `PICO_CONNECTION.md`: complete setup and usage guide.
-
+- `unity/PicoLeUr5HandStreamer.cs`：Unity 组件，读取 PICO 右手追踪数据，并发送 LeFranX 兼容 TCP 消息。
+- `PICO_CONNECTION.md`：完整安装、连接、运行和排错教程。
