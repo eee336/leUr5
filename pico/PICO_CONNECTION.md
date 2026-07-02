@@ -88,22 +88,140 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
 
 ## 4. 准备 PICO Unity 工程
 
-1. 创建或打开一个 Unity Android XR 工程。
-2. 导入 PICO Unity Integration SDK / PICO Unity XR SDK。
-3. 在 XR Plug-in Management 中启用 PICO XR plugin。
-4. 在 PICO 项目设置和头显设置中启用手部追踪。
-5. 新建一个空 GameObject，命名为 `LeUr5PicoStreamer`。
-6. 把 `pico/unity/PicoLeUr5HandStreamer.cs` 加入 Unity 工程。
-7. 将 `PicoLeUr5HandStreamer` 挂载到 `LeUr5PicoStreamer`。
-8. 在 Inspector 中设置：
+### 4.1 安装 Unity Android 构建环境
+
+1. 安装 Unity Hub。
+2. 安装 PICO Unity XR SDK 推荐的 Unity LTS 版本。通常优先选 `2021.3 LTS` 或 `2022.3 LTS`，以你下载的 PICO SDK 文档为准。
+3. 在 Unity Hub 的对应 Unity 版本里安装这些模块：
+   - `Android Build Support`
+   - `Android SDK & NDK Tools`
+   - `OpenJDK`
+4. 在电脑上安装 Android platform tools，确保能使用 `adb`：
+
+```bash
+adb version
+```
+
+如果没有 `adb`，Ubuntu 可以安装：
+
+```bash
+sudo apt update
+sudo apt install -y android-tools-adb
+```
+
+macOS 可以安装：
+
+```bash
+brew install android-platform-tools
+```
+
+### 4.2 创建 Unity 工程并导入 PICO SDK
+
+1. 用 Unity Hub 新建一个 `3D Core` 工程，例如 `LeUr5PicoStreamer`。
+2. 打开 `File -> Build Settings...`。
+3. 选择 `Android`，点击 `Switch Platform`。
+4. 导入 PICO Unity Integration SDK / PICO Unity XR SDK。
+   - 如果是 `.unitypackage`：双击或用 `Assets -> Import Package -> Custom Package...` 导入。
+   - 如果是 UPM package：用 `Window -> Package Manager -> + -> Add package from disk...` 或 PICO 文档指定方式导入。
+5. 打开 `Edit -> Project Settings -> XR Plug-in Management`。
+6. 在 `Android` 标签页启用 `PICO` XR plugin。
+7. 打开 PICO 相关 Project Settings，根据 PICO SDK 文档启用 hand tracking / hand tracking support。
+
+### 4.3 设置 Android Player
+
+打开 `Edit -> Project Settings -> Player -> Android`，建议检查这些项：
+
+```text
+Company Name = lefranx
+Product Name = LeUr5PicoStreamer
+Package Name = com.lefranx.pico
+Internet Access = Require
+Scripting Backend = IL2CPP
+Target Architectures = ARM64
+Minimum API Level = 按 PICO SDK 推荐值
+Target API Level = Automatic 或按 PICO SDK 推荐值
+```
+
+`Internet Access = Require` 很重要，因为 PICO App 需要通过 WiFi 连接电脑端 TCP server。
+
+### 4.4 加入 LeUr5 PICO 发送脚本
+
+1. 在 Unity 工程里新建目录 `Assets/Scripts`。
+2. 把本仓库的脚本复制到 Unity 工程：
+
+```bash
+cp /path/to/LeFranX/pico/unity/PicoLeUr5HandStreamer.cs \
+  /path/to/LeUr5PicoStreamer/Assets/Scripts/
+```
+
+3. 在 Unity Hierarchy 里新建空对象：
+
+```text
+GameObject -> Create Empty
+Name = LeUr5PicoStreamer
+```
+
+4. 选中 `LeUr5PicoStreamer`，在 Inspector 里点击 `Add Component`。
+5. 添加 `Pico Le Ur5 Hand Streamer` 组件。
+6. 在 Inspector 中设置：
 
 ```text
 Computer Host = 电脑 IP
 Computer Port = 8000
 Stream Hz = 30
+Verbose = true
 ```
 
-然后 Build 并安装到 PICO 头显。
+这里的 `Computer Host` 必须填电脑在同一 WiFi/LAN 下的 IP，不能填 `localhost` 或 `127.0.0.1`。
+
+### 4.5 Build APK
+
+1. 打开 `File -> Build Settings...`。
+2. 确认平台是 `Android`。
+3. 点击 `Add Open Scenes`，把当前 scene 加入 `Scenes In Build`。
+4. 点击 `Build`。
+5. 选择输出路径，例如：
+
+```text
+LeUr5PicoStreamer/build/LeUr5PicoStreamer.apk
+```
+
+如果你已经用 USB 连接好了 PICO，也可以点击 `Build And Run`，Unity 会尝试构建并直接安装到头显。
+
+### 4.6 安装到 PICO 头显
+
+先在 PICO 头显里打开开发者模式和 USB 调试。不同系统版本菜单名称略有差异，一般在开发者选项或设备管理相关页面里。
+
+用 USB-C 连接 PICO 和电脑后，在电脑上检查设备：
+
+```bash
+adb devices
+```
+
+第一次连接时，头显里通常会弹出 USB 调试授权，请在头显内确认允许。正常情况下会看到类似：
+
+```text
+List of devices attached
+XXXXXXXX	device
+```
+
+安装 APK：
+
+```bash
+adb install -r /path/to/LeUr5PicoStreamer/build/LeUr5PicoStreamer.apk
+```
+
+安装成功后，在 PICO 的应用列表里启动 `LeUr5PicoStreamer`。如果应用没有出现在普通应用列表，查看 PICO 的未知来源、开发者应用或全部应用列表。
+
+如果你希望用 Unity 一键安装：
+
+1. USB 连接 PICO。
+2. 运行 `adb devices` 确认设备状态是 `device`。
+3. 回到 Unity。
+4. 打开 `File -> Build Settings...`。
+5. 选择 `Build And Run`。
+
+Unity 会完成 build、install、launch 三步。失败时优先看 Unity Console 和 `adb devices` 状态。
 
 ## 5. 运行顺序
 
