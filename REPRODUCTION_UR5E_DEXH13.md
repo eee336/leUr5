@@ -70,6 +70,12 @@ For the complete Quest USB/ADB and WiFi setup, see:
 QUEST_CONNECTION.md
 ```
 
+If you use a PICO headset instead of Quest, use WiFi streaming and pass `--no-adb`. See:
+
+```text
+pico/PICO_CONNECTION.md
+```
+
 ## 5.1. Install Dex Retargeting Dependencies
 
 DexH13 hand mapping uses the `dexh13_right` URDF with `dex-retargeting` / DexPilot by default. Install the retargeting package from the bundled source:
