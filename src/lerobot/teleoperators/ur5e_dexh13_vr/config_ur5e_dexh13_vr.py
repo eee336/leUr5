@@ -14,12 +14,13 @@ class UR5eDexH13VRTeleoperatorConfig(TeleoperatorConfig):
     setup_adb: bool = True
     vr_verbose: bool = False
 
-    arm_smoothing_factor: float = 0.4
-    arm_movement_scale: float = 1.0
-    arm_max_position_offset: float = 0.65
-    arm_position_deadzone: float = 0.001
+    arm_smoothing_factor: float = 0.65
+    arm_movement_scale: float = 0.25
+    arm_max_position_offset: float = 0.20
+    arm_max_position_step: float = 0.015
+    arm_position_deadzone: float = 0.005
     arm_orientation_deadzone: float = 0.03
-    arm_control_orientation: bool = True
+    arm_control_orientation: bool = False
 
     hand_control_frequency: float = 30.0
     hand_smoothing_alpha: float = 0.45

@@ -32,6 +32,7 @@ class UR5eXHandVRTeleoperator(Teleoperator):
             smoothing_factor=config.arm_smoothing_factor,
             movement_scale=config.arm_movement_scale,
             max_position_offset=config.arm_max_position_offset,
+            max_position_step=config.arm_max_position_step,
             position_deadzone=config.arm_position_deadzone,
             orientation_deadzone=config.arm_orientation_deadzone,
             control_orientation=config.arm_control_orientation,

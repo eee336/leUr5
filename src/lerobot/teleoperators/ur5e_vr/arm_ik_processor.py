@@ -24,6 +24,7 @@ class UR5eArmIKProcessor:
         self.smoothing_factor = self.config.get("smoothing_factor", 0.4)
         self.movement_scale = self.config.get("movement_scale", 1.0)
         self.max_position_offset = self.config.get("max_position_offset", 0.65)
+        self.max_position_step = self.config.get("max_position_step", 0.015)
         self.position_deadzone = self.config.get("position_deadzone", 0.001)
         self.orientation_deadzone = self.config.get("orientation_deadzone", 0.03)
         self.control_orientation = self.config.get("control_orientation", True)
@@ -33,6 +34,7 @@ class UR5eArmIKProcessor:
         self.initial_vr_pose = None
         self.vr_initialized = False
         self.last_target_joints = None
+        self.last_target_matrix = None
 
     def setup(self, initial_robot_pose: List[float]) -> bool:
         try:
@@ -42,6 +44,7 @@ class UR5eArmIKProcessor:
             self.is_initialized = True
             self.vr_initialized = False
             self.last_target_joints = None
+            self.last_target_matrix = None
             return True
         except Exception as exc:
             logger.error("Failed to setup UR5e IK processor: %s", exc)
@@ -117,7 +120,8 @@ class UR5eArmIKProcessor:
             }
             self.vr_initialized = True
             logger.info("UR5e VR initialized at robot-frame position: %s", robot_position)
-            return self.initial_robot_pose.copy()
+            self.last_target_matrix = self.initial_robot_pose.copy()
+            return self.last_target_matrix.copy()
 
         position_delta = robot_position - self.initial_vr_pose["position"]
         if np.linalg.norm(position_delta) < self.position_deadzone:
@@ -130,6 +134,7 @@ class UR5eArmIKProcessor:
 
         target = self.initial_robot_pose.copy()
         target[:3, 3] = self.initial_robot_pose[:3, 3] + position_delta
+        target = self._limit_position_step(target)
 
         if self.control_orientation:
             initial_quat = self.initial_vr_pose["quaternion"]
@@ -145,12 +150,14 @@ class UR5eArmIKProcessor:
                 target_quat = target_quat / np.linalg.norm(target_quat)
                 target[:3, :3] = self._quaternion_to_rotation_matrix(target_quat)
 
+        self.last_target_matrix = target.copy()
         return target
 
     def reset_vr_reference(self) -> None:
         self.vr_initialized = False
         self.initial_vr_pose = None
         self.last_target_joints = None
+        self.last_target_matrix = None
 
     def get_status(self) -> Dict[str, Any]:
         return {
@@ -162,6 +169,26 @@ class UR5eArmIKProcessor:
     def _apply_smoothing(self, current: List[float], previous: List[float]) -> List[float]:
         alpha = 1.0 - self.smoothing_factor
         return [alpha * c + (1 - alpha) * p for c, p in zip(current, previous)]
+
+    def _limit_position_step(self, target: np.ndarray) -> np.ndarray:
+        if self.last_target_matrix is None or self.max_position_step <= 0:
+            return target
+
+        previous_position = self.last_target_matrix[:3, 3]
+        requested_step = target[:3, 3] - previous_position
+        step_norm = np.linalg.norm(requested_step)
+        if step_norm > self.max_position_step:
+            limited = target.copy()
+            limited[:3, 3] = previous_position + requested_step / step_norm * self.max_position_step
+            if self.verbose:
+                logger.debug(
+                    "Limited UR5e VR position step from %.4fm to %.4fm",
+                    step_norm,
+                    self.max_position_step,
+                )
+            return limited
+
+        return target
 
     @staticmethod
     def _matrix_to_pose6(transform: np.ndarray) -> list[float]:

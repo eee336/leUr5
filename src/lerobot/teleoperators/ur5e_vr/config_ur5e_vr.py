@@ -14,9 +14,10 @@ class UR5eVRTeleoperatorConfig(TeleoperatorConfig):
     setup_adb: bool = True
     verbose: bool = False
 
-    smoothing_factor: float = 0.4
-    movement_scale: float = 1.0
-    position_deadzone: float = 0.001
+    smoothing_factor: float = 0.65
+    movement_scale: float = 0.25
+    position_deadzone: float = 0.005
     orientation_deadzone: float = 0.03
-    max_position_offset: float = 0.65
-    control_orientation: bool = True
+    max_position_offset: float = 0.20
+    max_position_step: float = 0.015
+    control_orientation: bool = False

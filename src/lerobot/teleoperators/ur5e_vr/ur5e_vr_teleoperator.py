@@ -28,6 +28,7 @@ class UR5eVRTeleoperator(Teleoperator):
                 "smoothing_factor": config.smoothing_factor,
                 "movement_scale": config.movement_scale,
                 "max_position_offset": config.max_position_offset,
+                "max_position_step": config.max_position_step,
                 "position_deadzone": config.position_deadzone,
                 "orientation_deadzone": config.orientation_deadzone,
                 "control_orientation": config.control_orientation,

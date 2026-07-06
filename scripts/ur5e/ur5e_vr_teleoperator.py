@@ -29,6 +29,12 @@ def parse_args():
     parser.add_argument("--stub", action="store_true", help="Use software stub instead of real UR5e")
     parser.add_argument("--no-home", action="store_true", help="Skip reset_to_home before control")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose VR/IK logging")
+    parser.add_argument("--movement-scale", type=float, default=0.25, help="Scale VR wrist displacement before sending it to UR5e")
+    parser.add_argument("--max-position-offset", type=float, default=0.20, help="Maximum UR5e EE offset from the reset pose in meters")
+    parser.add_argument("--max-position-step", type=float, default=0.015, help="Maximum UR5e EE target position change per control cycle in meters")
+    parser.add_argument("--position-deadzone", type=float, default=0.005, help="Ignore VR wrist displacement below this value in meters")
+    parser.add_argument("--smoothing-factor", type=float, default=0.65, help="Joint target smoothing factor from 0 to 1")
+    parser.add_argument("--control-orientation", action="store_true", help="Also control UR5e EE orientation from the VR wrist quaternion")
     return parser.parse_args()
 
 
@@ -46,9 +52,12 @@ def main():
         tcp_port=args.vr_port,
         setup_adb=not args.no_adb,
         verbose=args.verbose,
-        smoothing_factor=0.4,
-        movement_scale=1.0,
-        max_position_offset=0.65,
+        smoothing_factor=args.smoothing_factor,
+        movement_scale=args.movement_scale,
+        max_position_offset=args.max_position_offset,
+        max_position_step=args.max_position_step,
+        position_deadzone=args.position_deadzone,
+        control_orientation=args.control_orientation,
     )
     teleop = UR5eVRTeleoperator(teleop_config)
 

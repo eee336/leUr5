@@ -86,6 +86,35 @@ python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
 
 注意保留 `--no-adb`，因为 PICO 通过 WiFi 直接连接电脑。
 
+PICO 初次联调时建议使用更保守的手臂参数。当前默认已经采用保守值：
+
+```text
+arm_movement_scale = 0.25
+arm_max_position_offset = 0.20 m
+arm_max_position_step = 0.015 m/control-cycle
+arm_position_deadzone = 0.005 m
+arm_control_orientation = false
+```
+
+如果真实机械臂仍然移动过大，可以继续降低：
+
+```bash
+python scripts/ur5e_dexh13/ur5e_dexh13_vr_teleoperator.py \
+  --robot-ip 192.168.1.10 \
+  --dexh13-protocol SDK \
+  --dexh13-hand-port /dev/ttyUSB0 \
+  --dexh13-camera-port none \
+  --dexh13-hand-backend retargeting \
+  --no-adb \
+  --vr-port 8000 \
+  --arm-movement-scale 0.10 \
+  --arm-max-position-offset 0.10 \
+  --arm-max-position-step 0.005 \
+  --arm-position-deadzone 0.01
+```
+
+先不要加 `--arm-control-orientation`。等位移方向、尺度和安全空间都确认正确后，再打开姿态控制。
+
 ## 4. 准备 PICO Unity 工程
 
 ### 4.1 安装 Unity Android 构建环境
@@ -285,3 +314,13 @@ ping COMPUTER_IP
   ```
 
 - 再调整 Unity 坐标转换或 Python VR 到 robot 的坐标转换。
+
+如果手稍微动一下，UR5e 末端就大幅扭转或移动：
+
+- 先确认启动命令没有加 `--arm-control-orientation`。PICO 手腕 quaternion 未标定前很容易让 UR5e 末端姿态突然翻转。
+- 把 `--arm-movement-scale` 降到 `0.10` 或 `0.05`。
+- 把 `--arm-max-position-step` 降到 `0.005`，这会限制每个控制周期最多移动 5mm。
+- 把 `--arm-max-position-offset` 降到 `0.10`，先把工作空间限制在初始点周围 10cm。
+- 如果静止时还抖动，把 `--arm-position-deadzone` 提到 `0.01`。
+- 每次戴上 PICO 或重新进入 Unity App 后，先让手保持在舒适的中立位置，再启动电脑端脚本；电脑端会把第一帧 VR 手腕位置作为零点。
+- 如果手向前，UR5e 却向左/向下移动，说明坐标轴映射不对，优先改 `src/lerobot/teleoperators/ur5e_vr/arm_ik_processor.py` 的 `_compute_target_matrix()`，不要同时改 Unity 端和 Python 端。

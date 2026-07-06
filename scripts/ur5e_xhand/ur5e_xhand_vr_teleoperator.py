@@ -33,6 +33,12 @@ def parse_args():
     parser.add_argument("--ur-stub", action="store_true", help="Use software stub for the UR5e")
     parser.add_argument("--no-home", action="store_true", help="Skip reset_to_home before control")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose VR/IK logging")
+    parser.add_argument("--arm-movement-scale", type=float, default=0.25, help="Scale VR wrist displacement before sending it to UR5e")
+    parser.add_argument("--arm-max-position-offset", type=float, default=0.20, help="Maximum UR5e EE offset from the reset pose in meters")
+    parser.add_argument("--arm-max-position-step", type=float, default=0.015, help="Maximum UR5e EE target position change per control cycle in meters")
+    parser.add_argument("--arm-position-deadzone", type=float, default=0.005, help="Ignore VR wrist displacement below this value in meters")
+    parser.add_argument("--arm-smoothing-factor", type=float, default=0.65, help="Joint target smoothing factor from 0 to 1")
+    parser.add_argument("--arm-control-orientation", action="store_true", help="Also control UR5e EE orientation from the VR wrist quaternion")
     return parser.parse_args()
 
 
@@ -64,9 +70,12 @@ def main():
         vr_tcp_port=args.vr_port,
         setup_adb=not args.no_adb,
         vr_verbose=args.verbose,
-        arm_smoothing_factor=0.4,
-        arm_movement_scale=1.0,
-        arm_max_position_offset=0.65,
+        arm_smoothing_factor=args.arm_smoothing_factor,
+        arm_movement_scale=args.arm_movement_scale,
+        arm_max_position_offset=args.arm_max_position_offset,
+        arm_max_position_step=args.arm_max_position_step,
+        arm_position_deadzone=args.arm_position_deadzone,
+        arm_control_orientation=args.arm_control_orientation,
         hand_robot_name="xhand_right",
         hand_retargeting_type="dexpilot",
         hand_type="right",
